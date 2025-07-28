@@ -1,0 +1,74 @@
+name: Check Domains
+
+on:
+  schedule:
+    - cron: "*/1 * * * *"
+  workflow_dispatch:
+
+jobs:
+  check_domains:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Depoyu Kopyala
+        uses: actions/checkout@v3
+
+      - name: Node.js Kur ve Paketleri Yükle
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Bağımlılıkları Yükle
+        run: npm ci
+
+      - name: Cypress Testlerini Çalıştır
+        run: npx cypress run | tee cypress-output.log || true
+
+      - name: Hatalı Domainleri Tespit Et ve Google Chat'e Bildir
+        env:
+          IMGUR_CLIENT_ID: ${{ secrets.IMGUR_CLIENT_ID }}
+          GOOGLE_CHAT_WEBHOOK_URL: ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
+        run: |
+          mkdir -p screenshots_flat
+
+          if [ -d "cypress/screenshots" ]; then
+            find cypress/screenshots -type f -name "*.png" -exec cp {} screenshots_flat/ \;
+          fi
+
+          msg=$'⚠️ PB Health Check\n🟥 Kontrol Edilmesi Gereken Hesaplar\n'
+
+          sed -E 's/\x1B\[[0-9;]*[mK]//g' cypress-output.log > clean-log.log
+
+          while read -r line; do
+            if [[ "$line" == *"HATA:"* ]]; then
+              link=$(echo "$line" | grep -oE 'https?://[^ ]+')
+              desc=$(echo "$line" | sed -E 's/.*→\s*(.*)/\1/')
+
+              desc=$(echo "$desc" | sed -E 's/\s*\x1B\[[0-9;]*m.*$//' | sed -E 's/\s+[0-9.]+s$//')
+
+              safe_name=$(echo "$link" | sed -E 's/https?:\/\///; s/[^a-zA-Z0-9]/_/g')
+              file=$(find screenshots_flat -type f -name "*${safe_name}*.png" | head -n 1)
+
+              if [ -f "$file" ]; then
+                response=$(curl -s --request POST "https://api.imgur.com/3/image" \
+                  --header "Authorization: Client-ID $IMGUR_CLIENT_ID" \
+                  --form "image=@$file")
+                imgur_link=$(echo "$response" | jq -r '.data.link')
+              else
+                imgur_link="(ekran görüntüsü bulunamadı)"
+              fi
+
+              msg+=$'\n❌ Link: '"$link"$'\n → '"$desc"$'\n🔗 Ekran Görüntüsü: '"$imgur_link"$'\n'
+            fi
+          done < clean-log.log
+
+          if [[ "$msg" == *"❌ Link:"* ]]; then
+            jq -n --arg text "$msg" '{ text: $text }' > message.json
+
+            curl -X POST "$GOOGLE_CHAT_WEBHOOK_URL" \
+              -H "Content-Type: application/json" \
+              -d @message.json
+          else
+            echo "Hatalı hesap bulunamadı, mesaj gönderilmeyecek."
+          fi
