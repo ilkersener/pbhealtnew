@@ -45,7 +45,7 @@
         errorMessage: "TELEPERFORMANCE MÜŞTERİSİNİ KONTROL EDİN!",
       },
       {
-        url: "https://shaya.peoplebox.biz/user/login",
+        url: "https://shayaa.peoplebox.biz/user/login",
         selector: "._main_1p1ww_22",
         errorMessage: "SHAYA MÜŞTERİSİNİ KONTROL EDİN!",
       },

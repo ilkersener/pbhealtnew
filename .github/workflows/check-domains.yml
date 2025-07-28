@@ -38,7 +38,6 @@ jobs:
 
           msg=$'⚠️ PB Health Check\n🟥 Kontrol Edilmesi Gereken Hesaplar\n'
 
-          # ANSI kodlarını temizle
           sed -E 's/\x1B\[[0-9;]*[mK]//g' cypress-output.log > clean-log.log
 
           while read -r line; do
@@ -46,7 +45,6 @@ jobs:
               link=$(echo "$line" | grep -oE 'https?://[^ ]+')
               desc=$(echo "$line" | sed -E 's/.*→\s*(.*)/\1/')
 
-              # ANSI kod temizliği sonrası halen sayılar varsa kes
               desc=$(echo "$desc" | sed -E 's/\s*\x1B\[[0-9;]*m.*$//' | sed -E 's/\s+[0-9.]+s$//')
 
               safe_name=$(echo "$link" | sed -E 's/https?:\/\///; s/[^a-zA-Z0-9]/_/g')
