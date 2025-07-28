@@ -25,9 +25,9 @@
         errorMessage: "Aİ MÜŞTERİSİNİ KONTROL EDİN!",
       },
       {
-        url: "https://arabamcom.peoplebox.biz/user/login",
+        url: "https://ilab.peoplebox.biz/user/login",
         selector: "._main_1p1ww_22",
-        errorMessage: "ARABAMCOM MÜŞTERİSİNİ KONTROL EDİN!",
+        errorMessage: "ILAB MÜŞTERİSİNİ KONTROL EDİN!",
       },
       {
         url: "https://iga.peoplebox.biz/user/login",
