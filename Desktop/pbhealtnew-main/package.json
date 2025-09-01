@@ -1,0 +1,18 @@
+{
+  "name": "pb_healt2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "cypress.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "cypress": "^14.1.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7"
+  }
+}
