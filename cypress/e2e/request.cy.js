@@ -125,7 +125,7 @@ function checkDomain(domain, attempt = 1) {
   cy.request({
     url: domain.url,
     failOnStatusCode: false,
-    timeout: 45000, //timeout ayarı
+    timeout: 45000,
   }).then((response) => {
     if (response.status >= 400) {
       throw new Error(`HATA: ${domain.url} HTTP ${response.status} → ${domain.errorMessage}`);
