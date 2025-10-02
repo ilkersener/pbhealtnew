@@ -127,7 +127,7 @@
           cy.request({
             url: domain.url,
             failOnStatusCode: false,
-            timeout: 75000,
+            timeout: 175000,
           }).then((response) => {
             if (response.status >= 400) {
               throw new Error(`HATA: ${domain.url} HTTP ${response.status} → ${domain.errorMessage}`);
