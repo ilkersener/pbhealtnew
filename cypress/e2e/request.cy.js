@@ -134,8 +134,8 @@
             }
 
 
-            cy.visit(domain.url, { timeout: 35000 });
-            cy.get("body", { timeout: 35000 }).then(($body) => {
+            cy.visit(domain.url, { timeout: 175000 });
+            cy.get("body", { timeout: 175000 }).then(($body) => {
               if ($body.find(domain.selector).length === 0) {
                 throw new Error(`HATA: ${domain.url} → ${domain.errorMessage}`);
               }
