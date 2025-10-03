@@ -2,7 +2,7 @@ name: Check Domains
 
 on:
   schedule:
-    - cron: "*/1 * * * *"
+    - cron: "*/60 * * * *"
   workflow_dispatch:
 
 jobs:
