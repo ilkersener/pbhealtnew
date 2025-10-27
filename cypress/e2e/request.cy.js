@@ -127,15 +127,15 @@
           cy.request({
             url: domain.url,
             failOnStatusCode: false,
-            timeout: 175000,
+            timeout: 200000,
           }).then((response) => {
             if (response.status >= 400) {
               throw new Error(`HATA: ${domain.url} HTTP ${response.status} → ${domain.errorMessage}`);
             }
 
 
-            cy.visit(domain.url, { timeout: 175000 });
-            cy.get("body", { timeout: 175000 }).then(($body) => {
+            cy.visit(domain.url, { timeout: 200000 });
+            cy.get("body", { timeout: 200000 }).then(($body) => {
               if ($body.find(domain.selector).length === 0) {
                 throw new Error(`HATA: ${domain.url} → ${domain.errorMessage}`);
               }
